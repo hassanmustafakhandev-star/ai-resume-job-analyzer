@@ -5,8 +5,8 @@
   <img src="https://img.shields.io/badge/FastAPI-0.115-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI" />
   <img src="https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white" alt="Supabase" />
   <img src="https://img.shields.io/badge/Sentence--BERT-FF9800?style=for-the-badge&logo=huggingface&logoColor=white" alt="Sentence-BERT" />
+  <img src="https://img.shields.io/badge/spaCy-09A3D5?style=for-the-badge&logo=spacy&logoColor=white" alt="spaCy" />
   <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
-  <img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Vercel" />
 </div>
 
 <br />
@@ -15,19 +15,57 @@
 
 ---
 
-## ✨ Core Highlights & Features
+## ✨ Core Highlights & Platform Capabilities
 
 ### 🔮 1. Semantic Resonance (Keyword Alchemy)
-We don't just do simple string matching. Our custom FastAPI backend runs **Sentence-BERT (`all-MiniLM-L6-v2`)** locally to compute high-dimensional cosine similarity between your resume narrative and the target job description.
+Traditional resume scanners rely on exact keyword matches. Electric Resume utilizes **Sentence-BERT (`all-MiniLM-L6-v2`)** running locally within a high-performance FastAPI pipeline. It calculates dense vector embeddings to measure true semantic alignment between your career narrative and target job descriptions.
 
-### 🚀 2. Action Verb Velocity
-Our NLP engine (`spaCy`) scans your bullet points to identify weak, passive phrases (e.g., *"was responsible for"*) and dynamically suggests high-impact industry action verbs (*Architected, Spearheaded, Scaled, Delivered*).
+### 🚀 2. Action Verb Velocity & NLP Dissection
+Powered by **spaCy (`en_core_web_sm`)**, our NLP engine performs advanced part-of-speech tagging and dependency parsing. It isolates weak, passive phrasing (e.g., *"was responsible for"*, *"helped with"*) and dynamic suggests high-voltage action verbs (*Architected, Spearheaded, Scaled, Implemented, Delivered*).
 
-### 📊 3. Bento-Grid Dashboard & History
-Track your career trajectory over time. Every analysis is securely saved to **Supabase**, allowing you to revisit past matches, view missing skill gaps, and generate public shareable report links.
+### 📊 3. Bento-Grid Dashboard & Historical Tracking
+Your career is a journey, not a static document. Every analysis is securely archived in **Supabase**, offering a rich bento-grid dashboard where professionals can track match score progression, monitor skill gap closure, and generate public shareable report tokens.
 
-### 🎨 4. Vivid Pop Design System
-Built on Next.js 16 App Router and Tailwind CSS, featuring rich dark/light modes, glassmorphic panels, and smooth micro-animations powered by **Framer Motion**.
+### 🎨 4. Vivid Pop SaaS Design System
+Engineered on the Next.js 16 App Router and Tailwind CSS, the platform delivers an ultra-premium aesthetic featuring glassmorphism, dynamic score gauges, dark/light contrast modes, and fluid micro-animations powered by **Framer Motion**.
+
+---
+
+## 🔬 Deep-Dive: Custom ML & NLP Pipeline
+
+Electric Resume operates a completely local, 5-stage custom machine learning architecture designed for maximum privacy, speed, and accuracy without relying on external paid LLM APIs:
+
+```
+┌────────────────────────────────────────────────────────┐
+│               RAW RESUME & JD INGESTION                │
+│    (PyMuPDF Threaded Parser / Plain-Text Sanitizer)    │
+└───────────────────────────┬────────────────────────────┘
+                            │
+┌───────────────────────────▼────────────────────────────┐
+│              STAGE 1: SKILL TAXONOMY MATCHER           │
+│   (Multi-phrase lookup across 300+ curated tech skills)│
+└───────────────────────────┬────────────────────────────┘
+                            │
+┌───────────────────────────▼────────────────────────────┐
+│              STAGE 2: SPACY NLP DISSECTION             │
+│   (Section classification & Action Verb extraction)    │
+└───────────────────────────┬────────────────────────────┘
+                            │
+┌───────────────────────────▼────────────────────────────┐
+│              STAGE 3: SBERT SEMANTIC ENGINE            │
+│   (High-dimensional Cosine Similarity Embedding Match) │
+└───────────────────────────┬────────────────────────────┘
+                            │
+┌───────────────────────────▼────────────────────────────┐
+│              STAGE 4: COMPOSITE AGGREGATOR             │
+│   (Weighted Score: 55% Semantic, 35% Skill, 10% Layout)│
+└───────────────────────────┬────────────────────────────┘
+                            │
+┌───────────────────────────▼────────────────────────────┐
+│              STAGE 5: DYNAMIC REPORT ENGINE            │
+│   (Tailored Section Rewrites & ATS Optimization Tips)  │
+└────────────────────────────────────────────────────────┘
+```
 
 ---
 
@@ -60,21 +98,21 @@ Built on Next.js 16 App Router and Tailwind CSS, featuring rich dark/light modes
 
 ---
 
-## 💻 Tech Stack
+## 💻 Tech Stack Specification
 
 ### Frontend (`/frontend`)
-* **Framework:** Next.js 16.2 (App Router)
-* **Styling:** Tailwind CSS + Radix UI
-* **Animations:** Framer Motion
-* **State & Auth:** React Context + Supabase Auth (`@supabase/supabase-js`)
-* **Charts & UI:** Recharts, React Dropzone, Sonner Toasts
+* **Core Framework:** Next.js 16.2 (App Router, Turbopack)
+* **Styling & UI:** Tailwind CSS, Radix UI Primitives, Lucide Icons
+* **Motion & Animation:** Framer Motion
+* **Authentication & Client:** React Context + `@supabase/supabase-js`
+* **Data Visualization:** Recharts, Custom SVG Gauges, React Dropzone, Sonner
 
 ### Backend (`/backend`)
-* **Framework:** FastAPI 0.115 + Uvicorn
-* **ML & NLP:** Sentence-Transformers (SBERT), spaCy (`en_core_web_sm`), Scikit-Learn
-* **PDF Extraction:** PyMuPDF (`fitz`) executed in async thread-pool
+* **Core Framework:** FastAPI 0.115 + Uvicorn ASGI Server
+* **Machine Learning:** Sentence-Transformers (`all-MiniLM-L6-v2`), Scikit-Learn
+* **Natural Language Processing:** spaCy (`en_core_web_sm`)
+* **Document Extraction:** PyMuPDF (`fitz`) executed in async thread-pool
 * **Security & Rate Limiting:** slowapi (in-memory RAM fallback), python-jose
-* **Database:** Supabase REST & Python Client
 
 ---
 
@@ -86,7 +124,7 @@ git clone https://github.com/hassanmustafakhandev-star/ai-resume-job-analyzer.gi
 cd ai-resume-job-analyzer
 ```
 
-### 2. Backend Setup
+### 2. Backend Setup (`/backend`)
 ```bash
 cd backend
 python -m venv venv
@@ -103,7 +141,7 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
 
-### 3. Frontend Setup
+### 3. Frontend Setup (`/frontend`)
 ```bash
 cd ../frontend
 npm install
@@ -111,25 +149,6 @@ npm install
 # Run Next.js dev server (runs on http://localhost:3000)
 npm run dev
 ```
-
----
-
-## 🌐 Vercel Deployment Guide
-
-This monorepo is fully configured for Vercel deployment. You will create **2 Vercel Projects** from this single repository:
-
-### 1. Deploy Backend (FastAPI)
-1. Import repo in Vercel. Name it `electric-resume-backend`.
-2. Set **Root Directory** to `backend`.
-3. Add your Supabase environment variables (`SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `JWT_SECRET`, `ENVIRONMENT=prod`).
-4. Click **Deploy**. (Vercel uses the included `backend/vercel.json` to deploy FastAPI as serverless functions).
-
-### 2. Deploy Frontend (Next.js)
-1. Import repo again in Vercel. Name it `electric-resume`.
-2. Set **Root Directory** to `frontend`.
-3. Add your environment variables (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`).
-4. Set `NEXT_PUBLIC_API_URL` to the live backend URL from Step 1 (e.g., `https://electric-resume-backend.vercel.app/api/v1`).
-5. Click **Deploy**.
 
 ---
 
