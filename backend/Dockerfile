@@ -1,40 +1,42 @@
-# ── Stage 1: Builder ──────────────────────────────────────────
-FROM python:3.12-slim AS builder
+# Use official lightweight Python runtime
+FROM python:3.10-slim
 
-WORKDIR /build
+# Set working directory
+WORKDIR /code
 
-# Install system deps needed for PyMuPDF compilation
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends gcc g++ && \
-    rm -rf /var/lib/apt/lists/*
+# Install system dependencies required for PyMuPDF, spaCy, and general ML
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
+# Copy requirements first to leverage Docker cache
+COPY ./requirements.txt /code/requirements.txt
 
+# Install Python dependencies
+RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
-# ── Stage 2: Runtime ──────────────────────────────────────────
-FROM python:3.12-slim AS runtime
+# Download spaCy English model during build time so it doesn't download on first request
+RUN python -m spacy download en_core_web_sm
 
-# Security: run as non-root
-RUN groupadd -r appuser && useradd -r -g appuser -d /app -s /sbin/nologin appuser
+# Pre-download Sentence-BERT model during build time to speed up first request
+RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')"
 
-WORKDIR /app
+# Set non-root user for security (Hugging Face Spaces strict requirement)
+RUN useradd -m -u 1000 user
+USER user
+ENV HOME=/home/user \
+    PATH=/home/user/.local/bin:$PATH
 
-# Copy installed packages from builder
-COPY --from=builder /install /usr/local
+# Set working directory to user home
+WORKDIR $HOME/app
 
-# Copy application code
-COPY app/ ./app/
+# Copy the rest of the application code
+COPY --chown=user . $HOME/app
 
-# Own everything by appuser
-RUN chown -R appuser:appuser /app
+# Expose port 7860 (Hugging Face Spaces default port)
+ENV PORT=7860
+EXPOSE 7860
 
-USER appuser
-
-EXPOSE 8000
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
-    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')" || exit 1
-
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Run FastAPI application using Uvicorn
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "7860"]
