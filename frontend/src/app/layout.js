@@ -1,6 +1,7 @@
 import { Plus_Jakarta_Sans } from "next/font/google"
 import { Toaster } from "sonner"
 import { AuthProvider } from "@/context/AuthContext"
+import Script from "next/script"
 import "./globals.css"
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -28,6 +29,15 @@ export default function RootLayout({ children }) {
           {children}
         </AuthProvider>
         <Toaster richColors position="top-center" />
+        {/* Botpress Webchat */}
+        <Script
+          src="https://cdn.botpress.cloud/webchat/v5.0/inject.js"
+          strategy="afterInteractive"
+        />
+        <Script
+          src="https://files.bpcontent.cloud/2026/09/07/14/20260907142558-T08QS3UN.js"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   )
